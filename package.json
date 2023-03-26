@@ -1,0 +1,40 @@
+{
+    "name": "@ansi-art/tools",
+    "version": "3.0.0-alpha1",
+    "main": "tools.js",
+    "devDependencies": {
+        "@commitlint/cli": "^17.4.4",
+        "@commitlint/config-conventional": "^17.4.4",
+        "chai": "^4.3.7",
+        "husky": "^8.0.3",
+        "jsdoc": "^3.6.3",
+        "jsdoc-to-markdown": "^8.0.0",
+        "mocha": "^10.2.0",
+        "pre-commit": "^1.2.2",
+        "tsd-jsdoc": "^2.5.0"
+    },
+    "scripts": {
+        "lint": "./node_modules/.bin/eslint *.js src/*.js test/*.js",
+        "test": "./node_modules/.bin/mocha",
+        "container-test": "docker build . -t tools -f ./containers/test.dockerfile; docker logs --follow \"$(docker run -d tools)\"",
+        "generate-types": "./node_modules/.bin/jsdoc -t node_modules/tsd-jsdoc/dist -r src/. -d types",
+        "generate-typescript-root": "cat ./types/types.d.ts > .d.ts",
+        "generate-docs": "for i in src/*.js; do ./node_modules/.bin/jsdoc2md \"${i}\" > \"docs/.md\"; done",
+        "add-generated-files-to-commit": "git add docs/*.md; git add types/*.ts; git add .d.ts"
+    },
+    "precommit.colors": true,
+    "precommit": [
+        "lint",
+        "test",
+        "container-test",
+        "generate-types",
+        "generate-typescript-root",
+        "generate-docs",
+        "add-generated-files-to-commit"
+    ],
+    "dependencies": {
+        "@ansi-art/char-subgrid": "^3.0.0-alpha2",
+        "@ansi-art/color": "^3.0.0-alpha2",
+        "maplex": "^0.0.3"
+    }
+}
