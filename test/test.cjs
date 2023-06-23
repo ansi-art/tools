@@ -1,6 +1,6 @@
 const should = require('chai').should();
-const { Ansi, Grid } = require('../tools');
-const AnsiColor = require('@ansi-art/color');
+const { Ansi, Grid } = require('../tools.cjs');
+const { Color } = require('@ansi-art/color');
 
 describe('tools', ()=>{
    describe('static tools', ()=>{
@@ -19,18 +19,19 @@ describe('tools', ()=>{
       });
        
    });
-    
-    const testContext = function(bitDepth){
+   const testContext = function(bitDepth){
+      const instance = new Ansi(new Color(bitDepth));
+      const code = (theCode)=> instance.codeRender([theCode]);
       it('tests for correct lengths', ()=>{
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
+         const ansi = new Ansi(new Color(bitDepth));
          ansi.length('a non-ansi string').should.equal(17);
-         ansi.length('an \033[1;31mansi string').should.equal(14);
+         ansi.length(`an ${code('1;31')}ansi string`).should.equal(14);
       });
        
       it('maps correctly', ()=>{
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
+         const ansi = new Ansi(new Color(bitDepth));
          const theString = 'a string I am testing';
-         const theStyledString = 'a \033[1;31mstring I am \033[1;34mtesting';
+         const theStyledString = `a ${code('1;31')}string I am ${code('1;34')}testing`;
          const seen = [];
          const stripped = ansi.map(theStyledString, (char, styles, [line, position])=>{
             styles.forEach((style)=> seen.push(style) );
@@ -43,28 +44,28 @@ describe('tools', ()=>{
       });
         
       it('strips correctly', ()=>{
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
+         const ansi = new Ansi(new Color(bitDepth));
          const theString = 'a string I am testing';
-         const theStyledString = 'a \033[1;31mstring I am \033[1;34mtesting';
+         const theStyledString = `a ${code('1;31')}string I am ${code('1;34')}testing`;
          ansi.strip(theStyledString).should.equal(theString);
       });
       
       it('splits into array', ()=>{
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
+         const ansi = new Ansi(new Color(bitDepth));
          const theString = 'a string I am testing';
-         const theStyledString = 'a \033[1;31mstring I am \033[1;34mtesting';
+         const theStyledString = `a ${code('1;31')}string I am ${code('1;34')}testing`;
          ansi.toArray(theStyledString).join('').should.equal(theString);
       });
       
       it('clear resolves correctly', ()=>{
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
-         ansi.clear().should.equal('\033[0m');
+         const ansi = new Ansi(new Color(bitDepth));
+         ansi.clear().should.equal(`${code('0')}`);
       });
       
       it('charAt refers to the correct indices', ()=>{
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
+         const ansi = new Ansi(new Color(bitDepth));
          const theString = 'a string I am testing';
-         const theStyledString = 'a \033[1;31mstring I am \033[1;34mtesting';
+         const theStyledString = `a ${code('1;31')}string I am ${code('1;34')}testing`;
          theString.split('').forEach((char, index)=>{
             ansi.charAt(theStyledString, index).should.equal(char);
          });
@@ -92,7 +93,8 @@ describe('tools', ()=>{
 -+-+-
  | | `;
          const bitDepth = '4bit';
-         const ansi = new Ansi(new AnsiColor.Color(bitDepth));
+         const ansi = new Ansi(new Color(bitDepth));
+         const code = (theCode)=> ansi.codeRender([theCode]);
          const grid = new Grid(startState, {bitDepth});
          grid.setValue(0, 0, 'X');
          grid.setValue(2, 2, 'O');
@@ -104,13 +106,17 @@ describe('tools', ()=>{
          grid.setValue(2, 4, 'X̶'+ansi.clear(), ['red']);
          grid.setValue(0, 4, 'X̶'+ansi.clear(), ['red']);
          grid.setValue(4, 4, 'X̶'+ansi.clear(), ['red']);
-         grid.toString().should.equal(
-            'X| |O\033[0m\n'+
-            '-+-+-\033[0m\n'+
-            'O|O| \033[0m\n'+
-            '-+-+-\033[0m\n'+
-            '\033[31mX̶\033[0m|\033[31mX̶\033[0m|\033[31mX̶\033[0m\033[0m\n'
-         );
+         const gridLines = grid.toString().split("\n");
+         const solvedLines = (
+            `X| |O${code('0')}\n`+
+            `-+-+-${code('0')}\n`+
+            `O|O| ${code('0')}\n`+
+            `-+-+-${code('0')}\n`+
+            `${code('31')}X̶${code('0')}|${code('31')}X̶${code('0')}|${code('31')}X̶${code('0')}${code('0')}\n`
+         ).split("\n");
+         gridLines.forEach((line, index)=>{
+            gridLines[index].should.equal(solvedLines[index]);
+         });
       });
    });
 });

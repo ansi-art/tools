@@ -1,11 +1,17 @@
 {
     "name": "@ansi-art/tools",
-    "version": "3.0.0-alpha1",
-    "main": "tools.js",
+    "version": "3.0.0-alpha3",
+    "main": "tools.cjs",
+    "module": "tools.mjs",
     "devDependencies": {
+        "@babel/cli": "^7.22.5",
+        "@babel/core": "^7.22.5",
+        "@babel/plugin-transform-modules-umd": "^7.22.5",
         "@commitlint/cli": "^17.4.4",
         "@commitlint/config-conventional": "^17.4.4",
+        "babel-plugin-search-and-replace": "^1.1.1",
         "chai": "^4.3.7",
+        "environment-safe-chai": "^0.0.1",
         "husky": "^8.0.3",
         "jsdoc": "^3.6.3",
         "jsdoc-to-markdown": "^8.0.0",
@@ -15,16 +21,24 @@
     },
     "scripts": {
         "lint": "./node_modules/.bin/eslint *.js src/*.js test/*.js",
-        "test": "./node_modules/.bin/mocha",
+        "test-require": "./node_modules/.bin/mocha test/test.cjs",
+        "test-import": "./node_modules/.bin/mocha test/test.mjs",
+        "test": "npm run test-require; npm run test-import",
+        "build": "npm run build-commonjs-root; npm run build-dist",
+        "build-dist": "./node_modules/.bin/babel src --out-dir dist --out-file-extension .cjs",
+        "build-commonjs-root": "./node_modules/.bin/babel tools.mjs > tools.cjs",
         "container-test": "docker build . -t tools -f ./containers/test.dockerfile; docker logs --follow \"$(docker run -d tools)\"",
-        "generate-types": "./node_modules/.bin/jsdoc -t node_modules/tsd-jsdoc/dist -r src/. -d types",
+        "generate-types": "./node_modules/.bin/jsdoc -t node_modules/tsd-jsdoc/dist -c jsdoc.json -r src/. -d types",
         "generate-typescript-root": "cat ./types/types.d.ts > .d.ts",
-        "generate-docs": "for i in src/*.js; do ./node_modules/.bin/jsdoc2md \"${i}\" > \"docs/.md\"; done",
+        "generate-docs": "for i in src/*.mjs; do echo \"${i}\";./node_modules/.bin/jsdoc2md -c jsdoc.json \"${i}\" > \"docs/$(basename ${i%.mjs}).md\"; done",
+        "tag-current-version": "git tag -a $(echo $(cat package.json | jq '(\"v\" + .version)' --unbuffered) | tr -d \"\\\"\") -m \"Release Version\"",
+        "npm-publish": "npm run tag-current-version; git push --follow-tags; npm publish",
         "add-generated-files-to-commit": "git add docs/*.md; git add types/*.ts; git add .d.ts"
     },
     "precommit.colors": true,
     "precommit": [
         "lint",
+        "build",
         "test",
         "container-test",
         "generate-types",
@@ -33,8 +47,8 @@
         "add-generated-files-to-commit"
     ],
     "dependencies": {
-        "@ansi-art/char-subgrid": "^3.0.0-alpha2",
-        "@ansi-art/color": "^3.0.0-alpha2",
-        "maplex": "^0.0.3"
+        "@ansi-art/char-subgrid": "^3.0.0-alpha3",
+        "@ansi-art/color": "^3.0.0-alpha3",
+        "maplex": "^1.0.0"
     }
 }
