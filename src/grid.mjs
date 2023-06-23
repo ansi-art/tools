@@ -21,7 +21,7 @@ export const Grid = function(str, opts){
     var w = 0;
     this.height = 1;
     this.ansi.map(str, function(chr, styles, p, pos, shortCircuit){
-        if(chr == "\n" ){
+        if(chr == '\n' ){
             row++;
             ob.height++;
             if(ob.width < w || !ob.width) ob.width = w;
@@ -39,7 +39,7 @@ export const Grid = function(str, opts){
         }
     }, true);
     this.height = this.data.length;
-}
+};
 
 /**
  * set the internal height and width of the grid
@@ -50,7 +50,7 @@ export const Grid = function(str, opts){
 Grid.prototype.canvasSize = function(height, width){
     this.height = height;
     this.width = width;
-}
+};
 
 /**
  * render the contents of the grid back into a string
@@ -68,10 +68,10 @@ Grid.prototype.toString = function(){
             item = this.data[y][x] || {chr:' '};
             result += this.ansi.codeRender(item.styles)+item.chr;
         }
-        result += "\u001B[0m\n";
+        result += '\u001B[0m\n';
     }
     return result;
-}
+};
 
 /**
  * set a specific value on the grid and either provide or absorb the existing styles
@@ -96,14 +96,14 @@ Grid.prototype.setValue = function(x, y, chr, styles){
         value.styles = this.ansi.stylesToCodes(styles);
     }
     this.data[y][x] = value;
-}
+};
 
 var dimensions = function(model, ob){
     var w = 0;
     var result = 0;
     var h = 0;
     ob.ansi.map(model, function(c){
-        if(c === "\n"){
+        if(c === '\n'){
             h++;
             if(w > result){
                 result = w;
@@ -115,11 +115,11 @@ var dimensions = function(model, ob){
         height : h,
         width : result
     };
-}
+};
 
 var isEmpty = function(chr){
     return (!chr.trim() || chr.trim() === '⠀');
-}
+};
 /**
  * draw a 2d string onto the grid at a specified offset
  * @function drawOnto
@@ -142,7 +142,7 @@ Grid.prototype.drawOnto = function(str, offX, offY, isTransparent, mergeStyles){
     var ob = this;
     this.ansi.map(str, function(chr, styles, p, pos, shortCircuit){
         if(ob.debug) console.log(chr, offX+x, offY+y, offX, x, offY, y);
-        if(chr === "\n" ){
+        if(chr === '\n' ){
             y++;
             x=0;
         }else{
@@ -152,4 +152,4 @@ Grid.prototype.drawOnto = function(str, offX, offY, isTransparent, mergeStyles){
             x++;
         }
     }, true);
-}
+};

@@ -12,6 +12,7 @@
         "babel-plugin-search-and-replace": "^1.1.1",
         "chai": "^4.3.7",
         "environment-safe-chai": "^0.0.1",
+        "eslint": "^8.43.0",
         "husky": "^8.0.3",
         "jsdoc": "^3.6.3",
         "jsdoc-to-markdown": "^8.0.0",
@@ -20,7 +21,7 @@
         "tsd-jsdoc": "^2.5.0"
     },
     "scripts": {
-        "lint": "./node_modules/.bin/eslint *.js src/*.js test/*.js",
+        "lint": "./node_modules/.bin/eslint *.mjs src/*.mjs test/*.mjs",
         "test-require": "./node_modules/.bin/mocha test/test.cjs",
         "test-import": "./node_modules/.bin/mocha test/test.mjs",
         "test": "npm run test-require; npm run test-import",
