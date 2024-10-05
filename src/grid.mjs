@@ -1,5 +1,5 @@
 import { Ansi } from './ansi.mjs';
-import { Color } from '@ansi-art/color/color.mjs';
+import { Color } from '@ansi-art/color';
 /**
  * This provides an abstraction for doing work in with an ansi string in a grid context
  * @module @ansi-art/tools/src/grid

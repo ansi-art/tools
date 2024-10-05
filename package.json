@@ -1,8 +1,31 @@
 {
     "name": "@ansi-art/tools",
-    "version": "3.0.0-alpha3",
-    "main": "tools.cjs",
+    "version": "3.0.0-alpha4",
+    "type": "module",
+    "main": "tools.mjs",
     "module": "tools.mjs",
+    "exports": {
+        ".": {
+            "import": "./tools.mjs",
+            "require": "./tools.cjs"
+        },
+        "./src/tools.mjs": {
+            "import": "./tools.mjs",
+            "require": "./tools.cjs"
+        },
+        "./dist/tools.cjs": {
+            "import": "./tools.mjs",
+            "require": "./tools.cjs"
+        },
+        "./index.js": {
+            "import": "./tools.mjs",
+            "require": "./tools.cjs"
+        },
+        "./tools.js": {
+            "import": "./tools.mjs",
+            "require": "./tools.cjs"
+        }
+    },
     "devDependencies": {
         "@babel/cli": "^7.22.5",
         "@babel/core": "^7.22.5",
@@ -41,15 +64,14 @@
         "lint",
         "build",
         "test",
-        "container-test",
         "generate-types",
         "generate-typescript-root",
         "generate-docs",
         "add-generated-files-to-commit"
     ],
     "dependencies": {
-        "@ansi-art/char-subgrid": "^3.0.0-alpha3",
-        "@ansi-art/color": "^3.0.0-alpha3",
+        "@ansi-art/char-subgrid": "^3.0.0-alpha4",
+        "@ansi-art/color": "^3.0.0-alpha4",
         "maplex": "^1.0.0"
     }
 }

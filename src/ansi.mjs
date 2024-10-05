@@ -1,5 +1,5 @@
 import { Maplex } from 'maplex/maplex.mjs';
-import { Palette, Medium, Space } from '@ansi-art/color/color.mjs';
+import { Palette, Medium, Space } from '@ansi-art/color';
 
 Maplex.Iterable.defaultValue = ' ';
 const maplex = new Maplex();

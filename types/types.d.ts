@@ -205,6 +205,146 @@ declare module "@ansi-art/tools/src/grid" {
 }
 
 /**
+ * A JSON object
+ */
+declare type JSON = any;
+
+/**
+ * A JSON object
+ */
+declare type JSON = any;
+
+/**
+ * set the baseDir
+ */
+declare function setBaseDir(): void;
+
+/**
+ * This function fetches the package in a uniform way
+ * @returns importList
+ */
+declare function scanImports(): JSON;
+
+/**
+ * Build type files as described in the source directory glob into the destination directory
+ * @param source - A glob pattern which describes the input files.
+ * @param destination - The directory to write output files into.
+ */
+declare function buildTypes(source: string, destination: string): void;
+
+/**
+ * Build type files as described in the source directory glob into the destination directory
+ * @param source - A glob pattern which describes the input files.
+ * @param destination - The directory to write output files into.
+ */
+declare function buildDocs(source: string, destination: string): void;
+
+/**
+ * A JSON object
+ */
+declare type JSON = any;
+
+/**
+ * set the baseDir
+ */
+declare function setBaseDir(): void;
+
+/**
+ * This function fetches the package in a uniform way
+ * @returns packageData
+ */
+declare function getPackage(): JSON;
+
+/**
+ * A JSON object
+ */
+declare type JSON = any;
+
+/**
+ * A JSON object
+ */
+declare type JSON = any;
+
+/**
+ * A JSON object
+ */
+declare type JSON = any;
+
+/**
+ * Creates a new Context, which is directly Proxy consumable.
+ */
+declare class Context {
+}
+
+/**
+ * @param key - The key being tested.
+ * @returns return true if the key is present.
+ */
+declare function has
+Does the context contain this key?(key: string): boolean;
+
+/**
+ * @param key - The key being retrieved.
+ * @param mode - The type of return context [promise, complete, callback].
+ * @param receiver - Receiver object.
+ * @returns return true if the key is present.
+ */
+declare function get
+Get the value associated with the key(key: string, mode: string, receiver: string): boolean;
+
+/**
+ * @param key - The key being retrieved.
+ * @param mode - The type of return context [promise, complete, callback].
+ * @param receiver - Receiver object.
+ * @returns return true if the key is present.
+ */
+declare function get
+Get the value associated with the key(key: string, mode: string, receiver: string): boolean;
+
+/**
+ * @param key - The key being deleted.
+ */
+declare function delete
+Delete the value associated with the key(key: string): void;
+
+/**
+ * @returns return true if the key is present.
+ */
+declare function enumerate
+Get an enumerated list.(): any[];
+
+/**
+ * @returns return The iterator.
+ */
+declare function iterate
+Iterate through the keys and values in the context(): iteration;
+
+/**
+ * @returns return true if the key is present.
+ */
+declare function keys
+Get the list of all present keys(): any[];
+
+/**
+ * @returns return the wrapped object.
+ */
+declare function wrap(): Proxy;
+
+/**
+ * @returns return the context.
+ */
+declare function asyncContext
+create a context to be able to chain it's members using callbacks or promises(): Proxy;
+
+/**
+ * A JSON object
+ */
+declare type JSON = any;
+
+declare function kitchenSync
+Wrap callback oriented code that can be used as a promise, without(): void;
+
+/**
  * Generate threshold maps as block characters
  */
 declare module "@ansi-art/char-subgrid/src/blocks" {
