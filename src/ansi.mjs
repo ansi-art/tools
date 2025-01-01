@@ -98,7 +98,7 @@ export const Ansi = function(options={}){
          * @returns {string} trimmedValue
          */
         trimTo :function(value, length){
-            const result = Ansi.substring(value, 0, length);
+            const result = obValue.substring(value, 0, length);
             return result;
         },
         /**
@@ -317,7 +317,15 @@ export const Ansi = function(options={}){
     const codes = Object.assign({}, palette.space.namedColorIndices, controlIndices);
     obValue.stylesToCodes = (styles)=>{
         if(typeof styles === 'string') return obValue.stylesToCodes(styles.split('+'));
-        return styles.map((style)=>{ return codes[style] || 'ERROR('+style+')'; });
+        return styles.map((style)=>{ 
+            if(!codes[style]){
+                if(parseInt(style).toString() === style){
+                    //this is a numeric string
+                    return style;
+                }
+            }
+            return codes[style] || 'ERROR('+style+')';
+        });
     };
     obValue.Codes = function(str, color, forceOff) {
         if(!color) return str;

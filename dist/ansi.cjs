@@ -1,8 +1,8 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "maplex/maplex.cjs", "@ansi-art/color/color.cjs"], factory);
+    define(["exports", "maplex/maplex.cjs", "@ansi-art/color"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("maplex/maplex.cjs"), require("@ansi-art/color/color.cjs"));
+    factory(exports, require("maplex/maplex.cjs"), require("@ansi-art/color"));
   } else {
     var mod = {
       exports: {}
@@ -17,17 +17,10 @@
     value: true
   });
   _exports.Ansi = void 0;
-  var AsciiArt = {};
-  var parentArt;
   _maplex.Maplex.Iterable.defaultValue = ' ';
   const maplex = new _maplex.Maplex();
-  maplex.convert = function (value) {
-    return AsciiArt.Ansi.toArray(value);
-  };
   const styleplex = new _maplex.Maplex();
-  styleplex.convert = function (value) {
-    return AsciiArt.Ansi.toObjectArray(value, true);
-  };
+
   /**
    * This provides an abstraction for doing work in an ansi context
    * @module @ansi-art/tools/src/ansi
@@ -55,7 +48,7 @@
        * @returns {integer} ansiColorCode
        */
       length: function (value) {
-        var count = 0;
+        let count = 0;
         obValue.map(value, function () {
           count++;
         });
@@ -69,7 +62,7 @@
        */
       codeRender: function (codes) {
         if (codes === undefined) return '';
-        var result = codes.map(function (code, index) {
+        const result = codes.map(function (code, index) {
           return '\u001B[' + code + 'm';
         }).join('');
         return result;
@@ -91,12 +84,10 @@
        * @returns {string} ansiSubstring
        */
       substring: function (value, start, stop) {
-        var previousCharPos;
-        var result;
-        var lowerbound = 0;
-        var upperbound;
+        let previousCharPos;
+        let lowerbound = 0;
+        let upperbound;
         if (stop === null) upperbound = value.length;
-        var isDone = false;
         obValue.map(value, function (chr, codes, rowcol, pos, done, charPos) {
           if (start && pos === start) {
             lowerbound = previousCharPos + 1;
@@ -118,7 +109,7 @@
        * @returns {string} trimmedValue
        */
       trimTo: function (value, length) {
-        var result = AsciiArt.Ansi.substring(value, 0, length);
+        const result = Ansi.substring(value, 0, length);
         return result;
       },
       /**
@@ -128,9 +119,9 @@
        * @returns {array} charAndStyleArray
        */
       toArray: function (value, includeStyles) {
-        var results = [];
+        const results = [];
         obValue.map(value, function (chr, styles) {
-          var res = includeStyles ? styles.map(function (style) {
+          const res = includeStyles ? styles.map(function (style) {
             return '' + style + 'm';
           }).join('') + chr : chr;
           results.push(res);
@@ -146,7 +137,7 @@
        * @returns {array} charArray
        */
       toObjectArray: function (value, includeStyles) {
-        var results = [];
+        let results = [];
         results = obValue.map(value, function (chr, styles) {
           chr.styles = styles;
           return chr;
@@ -173,12 +164,12 @@
        * @returns {array} charAndStyleArray
        */
       charAt: function (str, index, includePrefix) {
-        var result;
-        var previousCharPos;
+        let result;
+        let previousCharPos;
         obValue.map(str, function (chr, codes, rowcol, pos, done) {
           if (index == pos) {
             if (includePrefix && previousCharPos !== undefined) {
-              var prefix = str.substring(previousCharPos, pos - 1);
+              const prefix = str.substring(previousCharPos, pos - 1);
               result = prefix + chr;
             } else result = chr;
             return done();
@@ -195,32 +186,33 @@
        * @returns {Promise | null} charAndStyleArray
        */
       interstyle: function () {
-        var cb;
-        var result;
-        var args = Array.prototype.slice.call(arguments);
+        let cb;
+        let result;
+        let args = Array.prototype.slice.call(arguments);
         if (typeof args[args.length - 1] === 'function') {
           cb = args.pop();
         } else {
           //promise support
-          var doResolve;
-          var doError;
+          let doResolve;
+          let doError;
           result = new Promise(function (resolve, reject) {
             doResolve = resolve;
             doError = reject;
           });
           cb = function () {
-            var args = Array.prototype.slice.call(arguments);
-            var err = args.shift();
+            let args = Array.prototype.slice.call(arguments);
+            let err = args.shift();
             if (err) return doError(err);
             doResolve.apply(doResolve, args);
           };
         }
         args.push(function () {
-          var args = Array.prototype.slice.call(arguments);
-          var cb;
+          let args = Array.prototype.slice.call(arguments);
+          let cb;
+          // eslint-disable-next-line no-unused-vars
           if (typeof args[args.length - 1] === 'function') cb = args.pop();
-          var result = args.reduce(function (agg, item, index) {
-            return agg && obValue.strip(agg).trim() ? agg : item + (item.style ? AsciiArt.Ansi.codeRender(item.style) : '');
+          let result = args.reduce(function (agg, item, index) {
+            return agg && obValue.strip(agg).trim() ? agg : item + (item.style ? Ansi.codeRender(item.style) : '');
           }, undefined);
           return result;
         });
@@ -238,28 +230,28 @@
        * @returns {Promise | null} charAndStyleArray
        */
       intersect: function () {
-        var cb;
-        var result;
-        var args = Array.prototype.slice.call(arguments);
+        let cb;
+        let result;
+        let args = Array.prototype.slice.call(arguments);
         if (typeof args[args.length - 1] === 'function') {
           cb = args.pop();
         } else {
           //promise support
-          var doResolve;
-          var doError;
+          let doResolve;
+          let doError;
           result = new Promise(function (resolve, reject) {
             doResolve = resolve;
             doError = reject;
           });
           cb = function () {
-            var args = Array.prototype.slice.call(arguments);
-            var err = args.shift();
+            let args = Array.prototype.slice.call(arguments);
+            let err = args.shift();
             if (err) return doError(err);
             doResolve.apply(doResolve, args);
           };
         }
         args.push(function () {
-          var result = Array.prototype.slice.call(arguments).reduce(function (agg, item) {
+          let result = Array.prototype.slice.call(arguments).reduce(function (agg, item) {
             return agg === ' ' ? item : agg || item;
           }, undefined);
           return result;
@@ -280,20 +272,19 @@
        */
       map: function (value, handler, includeLineEndings) {
         if (value === null) throw new Error('cannot map undefined!');
-        var lcv = 0;
-        var result = '';
-        var inEscape = false;
-        var lines = value.split("\n");
-        var shortcircuit = false;
-        var fullPos = 0;
-        for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+        let lcv = 0;
+        let inEscape = false;
+        let lines = value.split('\n');
+        let shortcircuit = false;
+        let fullPos = 0;
+        for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
           if (shortcircuit) continue;
-          var line = lines[lineNumber];
-          var pos = 0;
-          var offset = lcv;
-          var newLine = '';
-          var code;
-          var codes = [];
+          let line = lines[lineNumber];
+          let pos = 0;
+          let offset = lcv;
+          let newLine = '';
+          let code;
+          let codes = [];
           for (; lcv - offset < line.length; lcv++) {
             if (shortcircuit) continue;
             if (inEscape) {
@@ -309,7 +300,7 @@
                 lcv++;
                 continue;
               }
-              var value = handler(line[lcv - offset], codes.slice(), [lineNumber, pos], fullPos, function () {
+              let value = handler(line[lcv - offset], codes.slice(), [lineNumber, pos], fullPos, function () {
                 shortcircuit = true;
               }, lcv);
               fullPos++;
@@ -319,12 +310,12 @@
               }
             }
           }
-          if (includeLineEndings) newLine += handler("\n", [], [lineNumber, pos], fullPos, function () {
+          if (includeLineEndings) newLine += handler('\n', [], [lineNumber, pos], fullPos, function () {
             shortcircuit = true;
           }, line.length);
           lines[lineNumber] = newLine;
         }
-        return lines.join("\n");
+        return lines.join('\n');
       }
     };
     const codes = Object.assign({}, palette.space.namedColorIndices, controlIndices);
@@ -336,24 +327,28 @@
     };
     obValue.Codes = function (str, color, forceOff) {
       if (!color) return str;
-      var color_attrs = color.split("+");
-      var ansi_str = "";
-      for (var i = 0, attr; attr = color_attrs[i]; i++) {
-        if (false && palette.standardColorNames.indexOf(attr) != -1) {
-          ansi_str += palette.named(attr);
+      let color_attrs = color.split('+');
+      let ansi_str = '';
+      let attr;
+      let i = 0;
+      // eslint-disable-next-line no-cond-assign
+      for (; attr = color_attrs[i]; i++) {
+        /*if(false && palette.standardColorNames.indexOf(attr) != -1){
+            ansi_str += palette.named(attr);
+        }else{*/
+        if (codes[attr]) {
+          //todo: deprecate and have color package handle
+          ansi_str += codes[attr];
         } else {
-          if (codes[attr]) {
-            //todo: deprecate and have color package handle
-            ansi_str += codes[attr];
-          } else {
-            if (attr[0] === '#') {
-              ansi_str += palette.code(attr);
-            } else {}
+          if (attr[0] === '#') {
+            ansi_str += palette.code(attr);
           }
         }
+        //}
       }
+
       ansi_str += str;
-      if (forceOff) ansi_str += codes["off"];
+      if (forceOff) ansi_str += codes['off'];
       return ansi_str;
     };
 
@@ -372,13 +367,7 @@
       }
   });*/
   _exports.Ansi = Ansi;
-  Ansi.len = function () {
-    return staticAnsi.length.apply(staticAnsi, arguments);
-  };
-  Ansi.setInstance = function (art) {
-    parentArt = art;
-  };
-  var normalizeStyle = function (newStyles, oldStyles) {
+  let normalizeStyle = function (newStyles, oldStyles) {
     //todo: WTF is this value???
     if (newStyles[0] === 'undefinedundefinedundefinedundefinedundefinedundefinedundefinedundefined') {
       return oldStyles;
@@ -400,7 +389,7 @@
 
     return oldStyles.concat(newStyles);
   };
-  var is = {
+  const is = {
     it: {
       /**
        * determine whether the provided style is a foreground color
@@ -435,7 +424,8 @@
         style.startsWith('4') && Number.isInteger(parseInt(style[1])) ||
         //16 color
 
-        style.startsWith('10') && Number.isInteger(parseInt(style[2])); //16 color, bright
+        style.startsWith('10') && Number.isInteger(parseInt(style[2])) ||
+        //16 color, bright
         style.startsWith('4') ||
         //16 color
         style.startsWith('10'); //16 color, bright
@@ -444,43 +434,49 @@
   };
 
   const controlIndices = {
-    "off": '0',
-    "clear": '0',
-    "reset": '0',
-    "bold": '1',
-    "italic": '3',
-    "underline": '4',
-    "blink": '5',
-    "strobe": '6',
-    "strikethru": '9',
-    "framed": '51',
-    "encircled": '52',
-    "overline": '53',
-    "unframed": '54',
-    "double-underline": '21',
-    "inverse": '7',
-    "hidden": '8',
-    "default-font": '10',
-    "font-0": '10',
-    "font-1": '11',
-    "font-2": '12',
-    "font-3": '13',
-    "font-4": '14',
-    "font-5": '15',
-    "font-6": '16',
-    "font-7": '17',
-    "font-8": '18',
-    "font-9": '19',
-    "font-gothic": '20',
-    "font-fraktur": '20',
-    "reset-font": '10',
-    "reset-intensity": '22',
-    "reset-italic": '23',
-    "reset-blackletter": '23',
-    "reset-inverse": '27',
-    "reset-underline": '24',
-    "reset-blinking": '25',
-    "reset-hidden": '28'
+    'off': '0',
+    'clear': '0',
+    'reset': '0',
+    'bold': '1',
+    'italic': '3',
+    'underline': '4',
+    'blink': '5',
+    'strobe': '6',
+    'strikethru': '9',
+    'framed': '51',
+    'encircled': '52',
+    'overline': '53',
+    'unframed': '54',
+    'double-underline': '21',
+    'inverse': '7',
+    'hidden': '8',
+    'default-font': '10',
+    'font-0': '10',
+    'font-1': '11',
+    'font-2': '12',
+    'font-3': '13',
+    'font-4': '14',
+    'font-5': '15',
+    'font-6': '16',
+    'font-7': '17',
+    'font-8': '18',
+    'font-9': '19',
+    'font-gothic': '20',
+    'font-fraktur': '20',
+    'reset-font': '10',
+    'reset-intensity': '22',
+    'reset-italic': '23',
+    'reset-blackletter': '23',
+    'reset-inverse': '27',
+    'reset-underline': '24',
+    'reset-blinking': '25',
+    'reset-hidden': '28'
+  };
+  styleplex.convert = function (value) {
+    return Ansi.toObjectArray(value, true);
+  };
+  maplex.convert = function (value) {
+    return Ansi.toArray(value);
   };
   Ansi.is = is;
 });

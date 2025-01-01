@@ -98,6 +98,22 @@ Grid.prototype.setValue = function(x, y, chr, styles){
     this.data[y][x] = value;
 };
 
+Grid.prototype.setStyles = function(x, y, styles){
+    this.setValue(
+        x, y,
+        this.getValue(x, y).chr,
+        styles
+    );
+};
+
+Grid.prototype.getValue = function(x, y, styles){
+    if(x > this.width || !this.data[y]){
+        //throw new Error('set outside bounds('+x+', '+y+')['+this.height+', '+this.width+']');
+        return;
+    }
+    return this.data[y][x];
+};
+
 var dimensions = function(model, ob){
     var w = 0;
     var result = 0;

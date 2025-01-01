@@ -1,8 +1,8 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "./ansi.cjs", "@ansi-art/color/color.cjs"], factory);
+    define(["exports", "./ansi.cjs", "@ansi-art/color"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("./ansi.cjs"), require("@ansi-art/color/color.cjs"));
+    factory(exports, require("./ansi.cjs"), require("@ansi-art/color"));
   } else {
     var mod = {
       exports: {}
@@ -37,7 +37,7 @@
     var w = 0;
     this.height = 1;
     this.ansi.map(str, function (chr, styles, p, pos, shortCircuit) {
-      if (chr == "\n") {
+      if (chr == '\n') {
         row++;
         ob.height++;
         if (ob.width < w || !ob.width) ob.width = w;
@@ -88,7 +88,7 @@
         };
         result += this.ansi.codeRender(item.styles) + item.chr;
       }
-      result += "\u001B[0m\n";
+      result += '\u001B[0m\n';
     }
     return result;
   };
@@ -122,7 +122,7 @@
     var result = 0;
     var h = 0;
     ob.ansi.map(model, function (c) {
-      if (c === "\n") {
+      if (c === '\n') {
         h++;
         if (w > result) {
           result = w;
@@ -161,7 +161,7 @@
     var ob = this;
     this.ansi.map(str, function (chr, styles, p, pos, shortCircuit) {
       if (ob.debug) console.log(chr, offX + x, offY + y, offX, x, offY, y);
-      if (chr === "\n") {
+      if (chr === '\n') {
         y++;
         x = 0;
       } else {
