@@ -109,7 +109,7 @@
        * @returns {string} trimmedValue
        */
       trimTo: function (value, length) {
-        const result = Ansi.substring(value, 0, length);
+        const result = obValue.substring(value, 0, length);
         return result;
       },
       /**
@@ -322,6 +322,12 @@
     obValue.stylesToCodes = styles => {
       if (typeof styles === 'string') return obValue.stylesToCodes(styles.split('+'));
       return styles.map(style => {
+        if (!codes[style]) {
+          if (parseInt(style).toString() === style) {
+            //this is a numeric string
+            return style;
+          }
+        }
         return codes[style] || 'ERROR(' + style + ')';
       });
     };

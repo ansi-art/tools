@@ -35,12 +35,12 @@
     var ob = this;
     var row = 0;
     var w = 0;
-    this.height = 1;
+    this.width = 1;
     this.ansi.map(str, function (chr, styles, p, pos, shortCircuit) {
       if (chr == '\n') {
         row++;
         ob.height++;
-        if (ob.width < w || !ob.width) ob.width = w;
+        if (ob.height < w || !ob.height) ob.height = w;
         w = 0;
       } else {
         if (!ob.data[row]) ob.data[row] = [];
@@ -55,7 +55,7 @@
         w++;
       }
     }, true);
-    this.height = this.data.length;
+    this.width = this.data.length;
   };
 
   /**
@@ -76,21 +76,19 @@
    * @returns {string} renderedString
    */
   Grid.prototype.toString = function () {
-    var result = '';
-    var item;
-    outer: for (var y = 0; y < this.height; y++) {
-      for (var x = 0; x < this.width; x++) {
-        if (!this.data[y]) {
-          continue outer;
+    //var item;
+    return this.data.map(line => line.map(c => this.ansi.codeRender(c.styles) + c.chr).join('')).join('\u001b[0m\n');
+    /*outer:for(var y=0; y < this.height; y++){
+        for(var x=0; x < this.width; x++){
+            if((!this.data[y]) || this.data[y].length===0){
+                continue outer;
+            }
+            item = this.data[y][x] || {chr:' '};
+            result += this.ansi.codeRender(item.styles)+item.chr;
         }
-        item = this.data[y][x] || {
-          chr: ' '
-        };
-        result += this.ansi.codeRender(item.styles) + item.chr;
-      }
-      result += '\u001B[0m\n';
-    }
-    return result;
+        result += '\u001B[0m\n';
+    }*/
+    //return result;
   };
 
   /**
@@ -101,7 +99,7 @@
    * @param {string} chr
    * @param {array} styles
    */
-  Grid.prototype.setValue = function (x, y, chr, styles) {
+  Grid.prototype.setValue = function (x, y, chr, styles, postStyles) {
     if (x > this.width || !this.data[y]) {
       //throw new Error('set outside bounds('+x+', '+y+')['+this.height+', '+this.width+']');
       return;
@@ -115,7 +113,20 @@
     if (Array.isArray(styles)) {
       value.styles = this.ansi.stylesToCodes(styles);
     }
+    if (Array.isArray(postStyles)) {
+      value.post = this.ansi.stylesToCodes(postStyles);
+    }
     this.data[y][x] = value;
+  };
+  Grid.prototype.setStyles = function (x, y, styles) {
+    this.setValue(x, y, this.getValue(x, y).chr, styles);
+  };
+  Grid.prototype.getValue = function (x, y, styles) {
+    if (x > this.width || !this.data[y]) {
+      //throw new Error('set outside bounds('+x+', '+y+')['+this.height+', '+this.width+']');
+      return;
+    }
+    return this.data[y][x];
   };
   var dimensions = function (model, ob) {
     var w = 0;

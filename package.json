@@ -1,6 +1,6 @@
 {
     "name": "@ansi-art/tools",
-    "version": "3.0.0-alpha5",
+    "version": "3.0.0-alpha6",
     "type": "module",
     "main": "tools.mjs",
     "module": "tools.mjs",
@@ -72,6 +72,7 @@
     "dependencies": {
         "@ansi-art/char-subgrid": "^3.0.0-alpha4",
         "@ansi-art/color": "^3.0.0-alpha4",
+        "@environment-safe/levenshtein": "^0.0.1",
         "maplex": "^1.0.0"
     }
 }

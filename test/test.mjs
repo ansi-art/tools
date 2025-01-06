@@ -3,6 +3,7 @@ import { chai } from 'environment-safe-chai';
 const should = chai.should();
 import { Ansi, Grid } from '../tools.mjs';
 import { Color } from '@ansi-art/color';
+import { distance } from '@environment-safe/levenshtein';
 
 describe('tools', ()=>{
     describe('static tools', ()=>{
@@ -115,11 +116,38 @@ describe('tools', ()=>{
                 `-+-+-${code('0')}\n`+
                 `O|O| ${code('0')}\n`+
                 `-+-+-${code('0')}\n`+
-                `${code('31')}X̶${code('0')}|${code('31')}X̶${code('0')}|${code('31')}X̶${code('0')}${code('0')}\n`
+                `${code('31')}X̶${code('0')}|${code('31')}X̶${code('0')}|${code('31')}X̶${code('0')}\n`
             ).split('\n');
             gridLines.forEach((line, index)=>{
+                distance(gridLines[index], solvedLines[index]).should.equal(0);
                 gridLines[index].should.equal(solvedLines[index]);
             });
         });
     });
 });
+
+/*
+const diff = (a, b)=>{
+    const minLength = Math.min(a.length, b.length);
+    for(let lcv = 0; lcv < minLength; lcv++){
+        if(a[lcv] !== b[lcv]){
+            return {
+                strings:[
+                    a.substring(lcv),
+                    b.substring(lcv)
+                ],
+                position: lcv
+            }
+        }
+        if(a.length !== b.length){
+            return {
+                strings:[
+                    a.substring(minLength),
+                    b.substring(minLength)
+                ],
+                position: minLength
+            }
+        }
+    }
+}
+//*/
